@@ -61,3 +61,10 @@ buck-out/
 # Expo
 .expo/*
 web-build/
+
+# environment
+.env
+
+# google setting files
+google-services.json
+GoogleService-Info.plist
