@@ -41,15 +41,8 @@ export default function App() {
 
       {/*
         //Sparkプランを使う人
-        uid && (
-        <Button
-          onPress={async () => {
-            await createUserByHandler()
-          }}
-          title={'createUserByHandler'}
-        ></Button>
-      )
-        */}
+        uid && <Button onPress={createUserByHandler} title={'createUserByHandler'}></Button>
+      */}
 
       {uid && <Button onPress={signout} title={'SingnOut'}></Button>}
       <StatusBar style="auto" />
