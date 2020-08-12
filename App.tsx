@@ -5,12 +5,12 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import firebase, { signout } from './src/repositories/firebase'
 import { signInGoogle } from './src/services/auth/google'
 import { useUser } from './src/hooks/user'
-// import { createUserByHandler } from './src/services/user' //Sparkプランを使う人
 
-type UsrComponentProps = {
+type UserComponentProps = {
   uid: string
 }
-const UserComponent = ({ uid }: UsrComponentProps) => {
+
+const UserComponent = ({ uid }: UserComponentProps) => {
   const { user, loading } = useUser(uid)
   return (
     <View>
@@ -25,7 +25,7 @@ const UserComponent = ({ uid }: UsrComponentProps) => {
   )
 }
 
-export default function App() {
+const App = () => {
   const [authUser, initialising, error] = useAuthState(firebase.auth())
   const uid = useMemo(() => {
     if (!authUser || (authUser && !authUser.uid)) return null
@@ -38,11 +38,6 @@ export default function App() {
       {error && <Text>error...</Text>}
       {uid && <UserComponent uid={uid} />}
       {!uid && <Button onPress={signInGoogle} title={'SingnIn Google'}></Button>}
-
-      {/*
-        //Sparkプランを使う人
-        uid && <Button onPress={createUserByHandler} title={'createUserByHandler'}></Button>
-      */}
 
       {uid && <Button onPress={signout} title={'SingnOut'}></Button>}
       <StatusBar style="auto" />
@@ -58,3 +53,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
+
+export default App

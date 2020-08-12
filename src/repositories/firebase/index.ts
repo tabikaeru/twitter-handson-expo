@@ -11,8 +11,9 @@ export const db = firebase.firestore()
 export const storage = firebase.storage()
 export const functions = firebase.functions()
 
-// Sparkプランを使う人
-// functions.useFunctionsEmulator('http://localhost:5000')
+if (process.env.FUNCTIONS_EMULATOR_URL) {
+  functions.useFunctionsEmulator(process.env.FUNCTIONS_EMULATOR_URL)
+}
 
 export const signout = async () => {
   await firebase.auth().signOut()
