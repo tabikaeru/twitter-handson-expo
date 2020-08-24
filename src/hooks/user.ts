@@ -9,18 +9,14 @@ const usersRef = db.collection('users')
 export const useUser = (uid: string) => {
   const [user, setUser] = useState<User>()
   const userRef = usersRef.doc(uid)
-  const [value, loading, error] = useDocument(userRef)
+  //Lesson1: アプリにログインログアウトを実装してみよう
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (loading || !value || !value.data()) return
-      const user = buildUser(value.id, value.data()!)
+      //Lesson1: アプリにログインログアウトを実装してみよう
       setUser(user)
-      if (error) {
-        console.info('catch useUser error', error)
-      }
     })
-  }, [error, loading, value])
+  }, [])
 
-  return { user, loading }
+  return { user }
 }
