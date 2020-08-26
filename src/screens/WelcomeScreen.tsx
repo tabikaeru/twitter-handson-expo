@@ -7,12 +7,12 @@ import firebase from '../repositories/firebase'
 
 const WelcomeScreen = () => {
   const navigation = useNavigation()
-  //Lesson1: アプリにログインログアウトを実装してみよう
-  const onPressSignInGoogle = useCallback(async () => {
-    //Lesson1: アプリにログインログアウトを実装してみよう
-  }, [])
 
   //Lesson1: アプリにログインログアウトを実装してみよう
+  const onPressSignInGoogle = useCallback(async () => {}, [])
+
+  //Lesson1: アプリにログインログアウトを実装してみよう
+  useEffect(() => {}, [])
 
   return (
     <View style={styles.container}>

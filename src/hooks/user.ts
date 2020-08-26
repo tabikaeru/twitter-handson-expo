@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { db } from '../repositories/firebase'
-import { InteractionManager } from 'react-native'
-import { buildUser, User } from '../entities'
 import { useDocument } from 'react-firebase-hooks/firestore'
 
+type User = {
+  uid: string
+  name: string
+}
 const usersRef = db.collection('users')
 
 export const useUser = (uid: string) => {
@@ -12,10 +14,7 @@ export const useUser = (uid: string) => {
   //Lesson1: アプリにログインログアウトを実装してみよう
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
-      //Lesson1: アプリにログインログアウトを実装してみよう
-      setUser(user)
-    })
+    //Lesson1: アプリにログインログアウトを実装してみよう
   }, [])
 
   return { user }

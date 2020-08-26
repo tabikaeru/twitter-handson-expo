@@ -1,7 +1,7 @@
 {
   "main": "index.js",
   "scripts": {
-    "start": "react-native start",
+    "start": "expo start",
     "dev": "expo start",
     "rn:android": "react-native run-android",
     "rn:ios": "react-native run-ios",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@react-native-community/google-signin": "^4.0.3",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
     "d": "^1.0.1",
