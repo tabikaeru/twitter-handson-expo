@@ -23,7 +23,7 @@ const HomeStackNavigator = () => (
 )
 
 const UserStackNavigator = () => {
-  const [user] = useAuthState(firebase.auth())
+  //Lesson1: アプリにログインログアウトを実装してみよう
   return (
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
@@ -33,7 +33,6 @@ const UserStackNavigator = () => {
           headerTitle: 'ユーザー',
           headerBackTitleVisible: false,
         }}
-        initialParams={{ uid: user?.uid }}
       />
     </Stack.Navigator>
   )

@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react'
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
-import firebase from '../repositories/firebase'
+import firebase, { signout } from '../repositories/firebase'
 import { useUser } from '../hooks/user'
 import { useRoute } from '@react-navigation/native'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const UserScreen = () => {
   const route = useRoute()
@@ -11,9 +12,14 @@ const UserScreen = () => {
 
   //Lesson1: アプリにログインログアウトを実装してみよう
   const onPressLogout = useCallback(() => {}, [])
+  //Lesson2: Firebase Fucntionsでユーザーデータを作成してみよう
 
   return (
     <View style={styles.root}>
+      {
+        //Lesson1: アプリにログインログアウトを実装してみよう
+      }
+
       {
         //Lesson2: Firebase Fucntionsでユーザーデータを作成してみよう
       }
