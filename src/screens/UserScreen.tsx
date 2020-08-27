@@ -9,16 +9,21 @@ const UserScreen = () => {
   const route = useRoute()
   const uid = route.params?.uid
   //Lesson1: アプリにログインログアウトを実装してみよう
+  const [user] = useAuthState(firebase.auth())
 
   //Lesson1: アプリにログインログアウトを実装してみよう
-  const onPressLogout = useCallback(() => {}, [])
+  const onPressLogout = useCallback(() => {
+    firebase.auth().signOut()
+  }, [])
   //Lesson2: Firebase Fucntionsでユーザーデータを作成してみよう
 
   return (
     <View style={styles.root}>
       {
         //Lesson1: アプリにログインログアウトを実装してみよう
+        user && user.uid && <Text>{user.uid}</Text>
       }
+      {uid && <Text>{uid}</Text>}
 
       {
         //Lesson2: Firebase Fucntionsでユーザーデータを作成してみよう

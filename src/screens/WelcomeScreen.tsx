@@ -9,10 +9,23 @@ const WelcomeScreen = () => {
   const navigation = useNavigation()
 
   //Lesson1: アプリにログインログアウトを実装してみよう
-  const onPressSignInGoogle = useCallback(async () => {}, [])
+  const [user] = useAuthState(firebase.auth())
+
+  const onPressSignInGoogle = useCallback(async () => {
+    const { canceled, error } = await signInGoogle()
+    if (canceled) {
+      return alert('ログインに失敗しました')
+    }
+    if (error) {
+      return alert('ログインをキャンセルしました')
+    }
+  }, [])
 
   //Lesson1: アプリにログインログアウトを実装してみよう
-  useEffect(() => {}, [])
+  useEffect(() => {
+    if (!user || !user.uid) return
+    navigation.navigate('Main')
+  }, [user, navigation])
 
   return (
     <View style={styles.container}>
