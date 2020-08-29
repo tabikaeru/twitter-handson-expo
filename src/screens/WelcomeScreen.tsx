@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/core'
+import { AntDesign } from '@expo/vector-icons'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { signInGoogle } from '../services/auth/google'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -35,7 +36,9 @@ const WelcomeScreen = () => {
         </View>
         <View style={styles.ButonContainer}>
           <TouchableOpacity style={styles.signinButton} onPress={onPressSignInGoogle}>
-            <Image style={styles.googleIcon} resizeMode="contain" source={require('../../assets/google-logo.png')} />
+            <View style={styles.iconWrapper}>
+              <AntDesign name="google" size={24} color="black" />
+            </View>
             <Text style={styles.signinText}>Signin With Google</Text>
           </TouchableOpacity>
         </View>
@@ -112,8 +115,8 @@ const styles = StyleSheet.create({
     color: '#404040',
     fontSize: 18,
   },
-  googleIcon: {
-    height: 30,
+  iconWrapper: {
+    paddingRight: 12,
   },
   termTextWrapper: {
     paddingTop: 36,

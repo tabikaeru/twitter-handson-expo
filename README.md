@@ -25,4 +25,4 @@ Blaze プランはかなり無料枠が大きいので基本的にはお金が�
 
 ## .env ファイルの設定
 
-.envExample を.env ファイルにリネームして，9 行目の#を消して`FUNCTIONS_EMULATOR_URL`を読み込めるようにする.
+.env.example を.env ファイルにリネームして，9 行目の#を消して`FUNCTIONS_EMULATOR_URL`を読み込めるようにする.
