@@ -5,6 +5,7 @@ import * as AppAuth from 'expo-app-auth'
 type Result = {
   success?: boolean
   canceled?: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error?: any
 }
 
@@ -15,6 +16,7 @@ export const signInGoogle = async (): Promise<Result> => {
       issuer: 'https://accounts.google.com',
       scopes: ['openid', 'profile'],
       clientId:
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         Platform.OS === 'ios' ? process.env.GOOGLE_CLIENT_ID_FOR_IOS! : process.env.GOOGLE_CLIENT_ID_FOR_ANDROID!,
     })
 
@@ -26,7 +28,7 @@ export const signInGoogle = async (): Promise<Result> => {
 
     firebase
       .auth()
-      .signInAndRetrieveDataWithCredential(credential)
+      .signInWithCredential(credential)
       .catch((error) => {
         throw new Error(error)
       })

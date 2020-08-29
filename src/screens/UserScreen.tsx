@@ -7,7 +7,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 
 const UserScreen = () => {
   const route = useRoute()
-  const uid = route.params?.uid
+
   //Lesson1: アプリにログインログアウトを実装してみよう
   const [user] = useAuthState(firebase.auth())
 
@@ -23,7 +23,6 @@ const UserScreen = () => {
         //Lesson1: アプリにログインログアウトを実装してみよう
         user && user.uid && <Text>{user.uid}</Text>
       }
-      {uid && <Text>{uid}</Text>}
 
       {
         //Lesson2: Firebase Fucntionsでユーザーデータを作成してみよう
