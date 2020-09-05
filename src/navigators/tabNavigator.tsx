@@ -6,6 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import firebase from '../repositories/firebase'
 import HomeScreen from '../screens/HomeScreen'
 import UserScreen from '../screens/UserScreen'
+import UpdateUserScreen from '../screens/UpdateUserScreen'
 
 const Stack = createStackNavigator()
 
@@ -23,7 +24,6 @@ const HomeStackNavigator = () => (
 )
 
 const UserStackNavigator = () => {
-  //Lesson1: アプリにログインログアウトを実装してみよう
   const [user] = useAuthState(firebase.auth())
   return (
     <Stack.Navigator initialRouteName="Main">
@@ -31,7 +31,17 @@ const UserStackNavigator = () => {
         name="Main"
         component={UserScreen}
         options={{
-          headerTitle: 'ユーザー',
+          headerTitle: null,
+          headerBackTitleVisible: false,
+          headerTransparent: true,
+        }}
+        initialParams={{ uid: user?.uid }}
+      />
+      <Stack.Screen
+        name="UpdateUser"
+        component={UpdateUserScreen}
+        options={{
+          headerTitle: '変更',
           headerBackTitleVisible: false,
         }}
         initialParams={{ uid: user?.uid }}
