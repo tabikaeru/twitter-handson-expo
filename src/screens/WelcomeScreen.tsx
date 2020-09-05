@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/core'
 import { AntDesign } from '@expo/vector-icons'
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { signInGoogle } from '../services/auth/google'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import firebase from '../repositories/firebase'
 
 const WelcomeScreen = () => {
   const navigation = useNavigation()
-
-  //Lesson1: アプリにログインログアウトを実装してみよう
   const [user] = useAuthState(firebase.auth())
 
   const onPressSignInGoogle = useCallback(async () => {
@@ -22,10 +20,12 @@ const WelcomeScreen = () => {
     }
   }, [])
 
-  //Lesson1: アプリにログインログアウトを実装してみよう
   useEffect(() => {
     if (!user || !user.uid) return
-    navigation.navigate('Main')
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Main' }],
+    })
   }, [user, navigation])
 
   return (
