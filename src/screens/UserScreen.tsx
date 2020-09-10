@@ -1,35 +1,85 @@
-import React, { useCallback } from 'react'
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
-import firebase, { signout } from '../repositories/firebase'
-import { useUser } from '../hooks/user'
+import React, { useCallback, useMemo } from 'react'
+import { View, Text, StyleSheet, Image } from 'react-native'
+import { useNavigation } from '@react-navigation/core'
 import { useRoute } from '@react-navigation/native'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import firebase from '../repositories/firebase'
+import { useUser } from '../services/hooks/user'
+import Spacer from '../components/atoms/spacer'
+import Avatar from '../components/atoms/avatar'
+import OutlinedButton from '../components/atoms/outlinedButton'
+
+const coverImageURL =
+  'https://image.shutterstock.com/z/stock-photo-friendly-romantic-encounter-boys-and-girls-autumn-day-in-the-old-town-363511535.jpg'
 
 const UserScreen = () => {
+  const navigation = useNavigation()
   const route = useRoute()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const uid = (route.params as any).uid
+  const [user, loading] = useUser(uid)
 
-  //Lesson1: アプリにログインログアウトを実装してみよう
-  const [user] = useAuthState(firebase.auth())
+  const showThumbnailURL = useMemo(() => {
+    if (user && user.thumbnailURL) {
+      return user.thumbnailURL
+    }
 
-  //Lesson1: アプリにログインログアウトを実装してみよう
+    return undefined
+  }, [user])
+
   const onPressLogout = useCallback(() => {
     firebase.auth().signOut()
   }, [])
-  //Lesson2: Firebase Fucntionsでユーザーデータを作成してみよう
+
+  const goToUpdateUser = useCallback(() => {
+    navigation.navigate('UpdateUser')
+  }, [navigation])
 
   return (
     <View style={styles.root}>
-      {
-        //Lesson1: アプリにログインログアウトを実装してみよう
-        user && user.uid && <Text>{user.uid}</Text>
-      }
+      <Image style={styles.coverImage} source={{ uri: coverImageURL }} />
 
-      {
-        //Lesson2: Firebase Fucntionsでユーザーデータを作成してみよう
-      }
-      <TouchableOpacity style={styles.logoutButton} onPress={onPressLogout}>
-        <Text style={styles.logoutButtonText}>ログアウト</Text>
-      </TouchableOpacity>
+      <View style={styles.headSection}>
+        <View style={styles.thumbnailWrapper}>
+          <Avatar size="l" uri={showThumbnailURL} />
+        </View>
+        <View style={styles.actionAreaWrapper}>
+          <View style={styles.row}>
+            <OutlinedButton text="変更" onPress={goToUpdateUser} />
+            <Spacer layout="vertical" size="xs" />
+            <OutlinedButton text="ログアウト" color="#FF3333" onPress={onPressLogout} />
+          </View>
+        </View>
+      </View>
+
+      <Spacer size="xxl" />
+
+      <View style={styles.section}>
+        <Text style={styles.nameText}>{loading ? '読み込み中' : user.name}</Text>
+        <Spacer size="xxs" />
+        <Text style={styles.idText}>@{uid}</Text>
+      </View>
+
+      <Spacer size="s" />
+
+      <View style={styles.section}>
+        <Text>{loading ? '読み込み中' : user.profile}</Text>
+      </View>
+
+      <Spacer size="s" />
+
+      <View style={styles.section}>
+        <View style={styles.row}>
+          <Text>
+            <Text style={styles.followCountText}>0</Text>
+            <Text style={styles.followLabelText}>フォロー中</Text>
+          </Text>
+          <Spacer layout="vertical" size="s" />
+          <Text>
+            <Text style={styles.followCountText}>0</Text>
+            <Text style={styles.followLabelText}>フォロワー</Text>
+          </Text>
+        </View>
+      </View>
     </View>
   )
 }
@@ -38,27 +88,49 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
     alignItems: 'center',
   },
-  message: {
-    textAlign: 'center',
+  coverImage: {
+    width: '100%',
+    height: 160,
+    resizeMode: 'cover',
   },
-  name: {
-    textAlign: 'center',
+  headSection: {
+    width: '100%',
+    position: 'relative',
   },
-  logoutButton: {
+  section: {
+    width: '100%',
+    paddingHorizontal: 24,
+  },
+  row: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 120,
-    padding: 12,
-    borderRadius: 50,
-    backgroundColor: '#ffffff',
+    flexDirection: 'row',
   },
-  logoutButtonText: {
-    color: '#404040',
+  thumbnailWrapper: {
+    position: 'absolute',
+    top: -30,
+    left: 24,
+  },
+  actionAreaWrapper: {
+    position: 'absolute',
+    top: 16,
+    right: 24,
+  },
+  nameText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  idText: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  followCountText: {
+    fontSize: 12,
+  },
+  followLabelText: {
+    fontSize: 12,
+    color: 'gray',
   },
 })
 
