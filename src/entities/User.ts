@@ -15,3 +15,9 @@ export const buildUser = (id: string, data: firebase.firestore.DocumentData) => 
 
   return newUser
 }
+
+export type UpdateUser = {
+  name: string
+  profile: string
+  thumbnailBlob?: Blob
+}
