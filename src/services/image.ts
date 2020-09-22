@@ -56,7 +56,8 @@ const manipulateImage = async (uri: string, maxWidth: number) => {
   }
 
   const resizeWidth = maxWidth
-  const resizeHeight = (height * resizeWidth) / maxWidth
+  const ratio = maxWidth / width
+  const resizeHeight = height * ratio
   const resizeResult = await ImageManipulator.manipulateAsync(
     uri,
     [{ resize: { width: resizeWidth, height: resizeHeight } }],
