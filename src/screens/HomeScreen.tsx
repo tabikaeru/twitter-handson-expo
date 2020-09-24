@@ -1,21 +1,23 @@
-import React, { useState, useCallback } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import React, { useCallback } from 'react'
+import { View, StyleSheet } from 'react-native'
+import { useNavigation } from '@react-navigation/core'
+import { MaterialIcons } from '@expo/vector-icons'
+import Fab from '../components/atoms/fab'
 
 const HomeScreen = () => {
-  const [text, setText] = useState<string>('')
+  const navigation = useNavigation()
 
-  const onTweet = useCallback((text: string) => {
-    console.info(`tweet: ${text}`)
-  }, [])
+  const goToCreateTweet = useCallback(() => {
+    navigation.navigate('CreateTweet')
+  }, [navigation])
 
   return (
     <View style={styles.root}>
-      <View style={styles.actionBar}>
-        <TouchableOpacity style={styles.tweetButton} onPress={() => onTweet(text)}>
-          <Text style={styles.tweetButtonText}>ツイートする</Text>
-        </TouchableOpacity>
+      <View style={styles.fabWrapper}>
+        <Fab onPress={goToCreateTweet}>
+          <MaterialIcons name="edit" size={24} color="#ffffff" />
+        </Fab>
       </View>
-      <TextInput style={styles.input} multiline={true} value={text} onChangeText={setText} />
     </View>
   )
 }
@@ -23,31 +25,11 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    display: 'flex',
-    alignContent: 'center',
   },
-  actionBar: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    padding: 12,
-  },
-  tweetButton: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 120,
-    padding: 12,
-    borderRadius: 50,
-    backgroundColor: 'rgb(29, 161, 242)',
-  },
-  tweetButtonText: {
-    color: '#ffffff',
-  },
-  input: {
-    height: 400,
-    backgroundColor: '#f8f8f8',
-    padding: 12,
+  fabWrapper: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
   },
 })
 

@@ -19,6 +19,11 @@ const setThumbnail = async (uid: string, blob: Blob): Promise<string | null> => 
     })
 }
 
+export const getUserRef = (uid: string) => {
+  const userRef = usersFirestoreRef.doc(uid)
+  return userRef
+}
+
 export const updateUser = async (uid: string, data: UpdateUser) => {
   const userFirestoreRef = usersFirestoreRef.doc(uid)
 
