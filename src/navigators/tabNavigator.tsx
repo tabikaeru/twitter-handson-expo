@@ -7,17 +7,37 @@ import firebase from '../repositories/firebase'
 import HomeScreen from '../screens/HomeScreen'
 import UserScreen from '../screens/UserScreen'
 import UpdateUserScreen from '../screens/UpdateUserScreen'
+import CreateTweetScreen from '../screens/CreateTweetScreen'
 
 const Stack = createStackNavigator()
 
-const HomeStackNavigator = () => (
-  <Stack.Navigator initialRouteName="Main">
+const TimelineStackNavigator = () => (
+  <Stack.Navigator initialRouteName="Main" mode="modal">
     <Stack.Screen
       name="Main"
       component={HomeScreen}
       options={{
         headerTitle: 'ホーム',
         headerBackTitleVisible: false,
+      }}
+    />
+    <Stack.Screen
+      name="CreateTweet"
+      component={CreateTweetScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
+  </Stack.Navigator>
+)
+
+const HomeStackNavigator = () => (
+  <Stack.Navigator initialRouteName="Main">
+    <Stack.Screen
+      name="Main"
+      component={TimelineStackNavigator}
+      options={{
+        headerShown: false,
       }}
     />
   </Stack.Navigator>
