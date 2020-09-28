@@ -27,7 +27,7 @@ const CreateTweetScreen = () => {
   const [text, setText] = useState<string>('')
   const [fileURLs, setFileURLs] = useState<string[]>([])
   const [firebaseUser] = useAuthState(firebase.auth())
-  const [user, loading] = useUser(firebaseUser.uid)
+  const [user] = useUser(firebaseUser.uid)
   const [fetching, setFetching] = useState<boolean>(false)
 
   const onAddImage = useCallback(async () => {
@@ -88,7 +88,7 @@ const CreateTweetScreen = () => {
         </View>
         <ScrollView>
           <View style={styles.content}>
-            <Avatar uri={!loading && user && user.thumbnailURL ? user.thumbnailURL : undefined} />
+            {user && <Avatar uri={user.thumbnailURL ?? undefined} />}
             <TextInput
               autoFocus={true}
               style={styles.input}
