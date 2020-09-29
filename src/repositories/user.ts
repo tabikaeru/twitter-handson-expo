@@ -1,5 +1,6 @@
 import firebase, { db, storage } from './firebase'
 import { UpdateUser } from '../entities/user'
+import { firestore } from 'firebase'
 
 const usersFirestoreRef = db.collection('users')
 const usersStorageRef = storage.ref('users')
@@ -36,6 +37,7 @@ export const updateUser = async (uid: string, data: UpdateUser) => {
     name: data.name,
     profile: data.profile,
     thumbnailURL,
+    updatedAt: firestore.FieldValue.serverTimestamp(),
   })
 
   return { result: true }

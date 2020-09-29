@@ -1,5 +1,5 @@
 import React from 'react'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -8,6 +8,7 @@ import HomeScreen from '../screens/HomeScreen'
 import UserScreen from '../screens/UserScreen'
 import UpdateUserScreen from '../screens/UpdateUserScreen'
 import CreateTweetScreen from '../screens/CreateTweetScreen'
+import TweetScreen from '../screens/TweetScreen'
 
 const Stack = createStackNavigator()
 
@@ -17,7 +18,8 @@ const TimelineStackNavigator = () => (
       name="Main"
       component={HomeScreen}
       options={{
-        headerTitle: 'ホーム',
+        // eslint-disable-next-line react/display-name
+        headerTitle: () => <AntDesign name="twitter" size={30} color="#1da1f2" />,
         headerBackTitleVisible: false,
       }}
     />
@@ -38,6 +40,23 @@ const HomeStackNavigator = () => (
       component={TimelineStackNavigator}
       options={{
         headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="Tweet"
+      component={TweetScreen}
+      options={{
+        headerTitle: 'ツイート',
+        headerBackTitleVisible: false,
+      }}
+    />
+    <Stack.Screen
+      name="User"
+      component={UserScreen}
+      options={{
+        headerTitle: null,
+        headerBackTitleVisible: false,
+        headerTransparent: true,
       }}
     />
   </Stack.Navigator>

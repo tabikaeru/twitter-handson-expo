@@ -1,3 +1,4 @@
+import { firestore } from 'firebase'
 import { db, storage } from './firebase'
 import { CreateTweet } from '../entities/Tweet'
 
@@ -42,6 +43,8 @@ export const createTweet = async (uid: string, data: CreateTweet) => {
     text: data.text,
     fileURLs,
     writer: data.writer,
+    createdAt: firestore.FieldValue.serverTimestamp(),
+    updatedAt: firestore.FieldValue.serverTimestamp(),
   })
   return { result: true }
 }
