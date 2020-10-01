@@ -3,8 +3,10 @@ export type Tweet = {
   text: string
   fileURLs: string[]
   writer: {
-    user: firebase.firestore.DocumentReference
+    ref: firebase.firestore.DocumentReference
   }
+  createdAt: Date
+  updatedAt: Date
 }
 
 export const buildTweet = (id: string, data: firebase.firestore.DocumentData) => {
@@ -13,6 +15,8 @@ export const buildTweet = (id: string, data: firebase.firestore.DocumentData) =>
     text: data.text,
     fileURLs: data.fileURLs,
     writer: data.writer,
+    createdAt: data.createdAt.toDate(),
+    updatedAt: data.updatedAt.toDate(),
   }
 
   return newTweet
