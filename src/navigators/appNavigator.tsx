@@ -10,9 +10,9 @@ import { auth } from '../repositories/firebase'
 const Stack = createStackNavigator()
 
 const AppNavigator = () => {
-  const [user, initilalising, error] = useAuthState(auth)
+  const [user, initializing, error] = useAuthState(auth)
 
-  if (initilalising) {
+  if (initializing) {
     return <AuthLoadingScreen />
   }
 
