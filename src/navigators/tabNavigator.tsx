@@ -3,7 +3,7 @@ import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import firebase from '../repositories/firebase'
+import { auth } from '../repositories/firebase'
 import HomeScreen from '../screens/HomeScreen'
 import UserScreen from '../screens/UserScreen'
 import UpdateUserScreen from '../screens/UpdateUserScreen'
@@ -63,7 +63,7 @@ const HomeStackNavigator = () => (
 )
 
 const UserStackNavigator = () => {
-  const [user] = useAuthState(firebase.auth())
+  const [user] = useAuthState(auth)
   return (
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
