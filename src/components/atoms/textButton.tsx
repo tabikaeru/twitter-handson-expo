@@ -26,6 +26,7 @@ const TextButton: React.FC<TextButtonProps> = ({
 const styles = StyleSheet.create({
   root: {
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 6,
