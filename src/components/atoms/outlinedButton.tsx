@@ -26,6 +26,7 @@ const OutlinedButton: React.FC<OutlinedButtonProps> = ({
 const styles = StyleSheet.create({
   root: {
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,

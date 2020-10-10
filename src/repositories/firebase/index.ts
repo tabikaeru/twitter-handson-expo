@@ -10,12 +10,14 @@ firebase.initializeApp(config)
 export const db = firebase.firestore()
 export const storage = firebase.storage()
 export const functions = firebase.functions()
+export const auth = firebase.auth()
 
 if (process.env.FUNCTIONS_EMULATOR_URL) {
   functions.useFunctionsEmulator(process.env.FUNCTIONS_EMULATOR_URL)
 }
 
 export const signout = async () => {
-  await firebase.auth().signOut()
+  await auth.signOut()
 }
+
 export default firebase

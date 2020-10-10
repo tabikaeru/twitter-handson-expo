@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/core'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { CreateTweet } from '../entities/Tweet'
-import firebase from '../repositories/firebase'
+import { auth } from '../repositories/firebase'
 import { createTweet } from '../repositories/tweet'
 import { getUserRef } from '../repositories/user'
 import { pickImageFromDevice, convertURLToBlob } from '../services/image'
@@ -26,7 +26,7 @@ const CreateTweetScreen = () => {
   const navigation = useNavigation()
   const [text, setText] = useState<string>('')
   const [fileURLs, setFileURLs] = useState<string[]>([])
-  const [firebaseUser] = useAuthState(firebase.auth())
+  const [firebaseUser] = useAuthState(auth)
   const [user] = useUser(firebaseUser.uid)
   const [fetching, setFetching] = useState<boolean>(false)
 
