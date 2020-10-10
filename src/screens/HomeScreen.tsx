@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { MaterialIcons } from '@expo/vector-icons'
-import firebase from '../repositories/firebase'
+import { auth } from '../repositories/firebase'
 import { useUser } from '../services/hooks/user'
 import { useTweets } from '../services/hooks/tweet'
 import Fab from '../components/atoms/fab'
@@ -13,7 +13,7 @@ import TweetCard from '../components/organisms/tweetCard'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
-  const [firebaseUser] = useAuthState(firebase.auth())
+  const [firebaseUser] = useAuthState(auth)
   const [user] = useUser(firebaseUser.uid)
   const [tweets] = useTweets()
 

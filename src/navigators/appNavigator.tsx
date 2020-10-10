@@ -1,53 +1,30 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import TabNavigator from './tabNavigator'
-import WelcomeScreen from '../screens/WelcomeScreen'
-import firebase from '../repositories/firebase'
+import WelcomeNavigator from './welcomeNavigator'
+import AuthLoadingScreen from '../screens/AuthLoadingScreen'
+import AuthErrorScreen from '../screens/AuthErrorScreen'
+import { auth } from '../repositories/firebase'
 
 const Stack = createStackNavigator()
 
 const AppNavigator = () => {
-  //Lesson1: アプリにログインログアウトを実装してみよう
-  const [user, initilalising, error] = useAuthState(firebase.auth())
-  if (initilalising) {
-    return (
-      <View>
-        <Text>initializing...</Text>
-      </View>
-    )
+  const [user, initializing, error] = useAuthState(auth)
+
+  if (initializing) {
+    return <AuthLoadingScreen />
   }
 
   if (error) {
-    return (
-      <View>
-        <Text>error</Text>
-      </View>
-    )
+    return <AuthErrorScreen />
   }
 
-  return (
-    <Stack.Navigator screenOptions={{ gestureEnabled: false }} headerMode="none">
-      {
-        //Lesson1: アプリにログインログアウトを実装してみよう
-        user && user.uid && <Stack.Screen name="Main" component={TabNavigator} />
-      }
-      <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
-    </Stack.Navigator>
-  )
-}
+  if (user) {
+    return <TabNavigator />
+  }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  message: {
-    textAlign: 'center',
-  },
-})
+  return <WelcomeNavigator />
+}
 
 export default AppNavigator
