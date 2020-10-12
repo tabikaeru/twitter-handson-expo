@@ -9,6 +9,7 @@ import UserScreen from '../screens/UserScreen'
 import UpdateUserScreen from '../screens/UpdateUserScreen'
 import CreateTweetScreen from '../screens/CreateTweetScreen'
 import TweetScreen from '../screens/TweetScreen'
+import FollowListScreen from '../screens/FollowListScreen'
 
 const Stack = createStackNavigator()
 
@@ -59,6 +60,26 @@ const HomeStackNavigator = () => (
         headerTransparent: true,
       }}
     />
+    <Stack.Screen
+      name="UpdateUser"
+      component={UpdateUserScreen}
+      options={{
+        headerTitle: '変更',
+        headerBackTitleVisible: false,
+      }}
+    />
+    <Stack.Screen
+      name="FollowList"
+      component={FollowListScreen}
+      options={{
+        headerBackTitleVisible: false,
+        headerStyle: {
+          shadowColor: 'transparent',
+          shadowOpacity: 0,
+          elevation: 0,
+        },
+      }}
+    />
   </Stack.Navigator>
 )
 
@@ -77,6 +98,15 @@ const UserStackNavigator = () => {
         initialParams={{ uid: user?.uid }}
       />
       <Stack.Screen
+        name="User"
+        component={UserScreen}
+        options={{
+          headerTitle: null,
+          headerBackTitleVisible: false,
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
         name="UpdateUser"
         component={UpdateUserScreen}
         options={{
@@ -84,6 +114,18 @@ const UserStackNavigator = () => {
           headerBackTitleVisible: false,
         }}
         initialParams={{ uid: user?.uid }}
+      />
+      <Stack.Screen
+        name="FollowList"
+        component={FollowListScreen}
+        options={{
+          headerBackTitleVisible: false,
+          headerStyle: {
+            shadowColor: 'transparent',
+            shadowOpacity: 0,
+            elevation: 0,
+          },
+        }}
       />
     </Stack.Navigator>
   )
