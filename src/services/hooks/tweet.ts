@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Tweet, buildTweet } from '../../entities/Tweet'
 import { db } from '../../repositories/firebase'
 import { now } from '../date'

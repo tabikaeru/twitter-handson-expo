@@ -48,13 +48,11 @@ const UserScreen = () => {
   }, [])
 
   const goToUpdateUser = useCallback(() => {
-    // navigation.navigate('UpdateUser')
     navigation.dispatch(StackActions.push('UpdateUser', { uid: firebaseUser.uid }))
   }, [firebaseUser, navigation])
 
   const goToFollowList = useCallback(
     (section: 'follow' | 'follower') => {
-      // navigation.navigate('FollowList', { uid, section })
       navigation.dispatch(StackActions.push('FollowList', { uid, section }))
     },
     [uid, navigation]
