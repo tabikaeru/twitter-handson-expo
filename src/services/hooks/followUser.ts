@@ -56,9 +56,12 @@ export const useFollowUserPaginator = (
   const [error, setError] = useState<firebase.firestore.FirestoreError | null>(null)
   const lastSnapshot = useRef<firebase.firestore.DocumentData | null>(null)
   const isFirstFetched = useRef<boolean>(false)
+  const isProcessing = useRef<boolean>(false)
 
   const onInitialize = useCallback(async () => {
     try {
+      if (isProcessing.current) return
+      isProcessing.current = true
       setLoading(true)
       lastSnapshot.current = null
 
@@ -76,15 +79,19 @@ export const useFollowUserPaginator = (
       setValues(targets)
       setLoading(false)
       isFirstFetched.current = true
+      isProcessing.current = false
     } catch (e) {
       setError(e)
       setLoading(false)
+      isProcessing.current = false
     }
   }, [per, uid])
 
   const onNext = useCallback(async () => {
     try {
+      if (isProcessing.current) return
       if (isFirstFetched.current && !lastSnapshot.current) return
+      isProcessing.current = true
 
       const targetsRef = getFollowUsersRef(uid)
       const query = targetsRef.startAfter(lastSnapshot.current).limit(per)
@@ -98,9 +105,11 @@ export const useFollowUserPaginator = (
       }
 
       setValues((prev) => [...prev, ...targets])
+      isProcessing.current = false
     } catch (e) {
       setError(e)
       setLoading(false)
+      isProcessing.current = false
     }
   }, [per, uid])
 
