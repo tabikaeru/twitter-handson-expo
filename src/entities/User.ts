@@ -3,6 +3,8 @@ export type User = {
   name: string
   profile: string
   thumbnailURL: string | null
+  followCount: number
+  followerCount: number
   createdAt: Date
   updatedAt: Date
 }
@@ -13,6 +15,8 @@ export const buildUser = (id: string, data: firebase.firestore.DocumentData) => 
     name: data.name,
     profile: data.profile,
     thumbnailURL: data.thumbnailURL,
+    followCount: data.followCount,
+    followerCount: data.followerCount,
     createdAt: data.createdAt.toDate(),
     updatedAt: data.updatedAt.toDate(),
   }
