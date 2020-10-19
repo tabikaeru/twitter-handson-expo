@@ -111,12 +111,12 @@ const UserScreen = () => {
       <View style={styles.section}>
         <View style={styles.row}>
           <Text onPress={() => goToFollowList('follow')}>
-            <Text style={styles.followCountText}>0</Text>
+            <Text style={styles.followCountText}>{loading ? '読み込み中' : user.followCount}</Text>
             <Text style={styles.followLabelText}>フォロー中</Text>
           </Text>
           <Spacer layout="vertical" size="s" />
           <Text onPress={() => goToFollowList('follower')}>
-            <Text style={styles.followCountText}>0</Text>
+            <Text style={styles.followCountText}>{loading ? '読み込み中' : user.followerCount}</Text>
             <Text style={styles.followLabelText}>フォロワー</Text>
           </Text>
         </View>
