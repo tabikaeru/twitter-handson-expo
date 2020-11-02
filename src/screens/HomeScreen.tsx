@@ -1,21 +1,24 @@
-import React, { useCallback, useLayoutEffect } from 'react'
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import React, { useCallback, useEffect, useLayoutEffect } from 'react'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth } from '../repositories/firebase'
 import { useUser } from '../services/hooks/user'
-import { useTweets } from '../services/hooks/tweet'
+import { useFollowTweetPaginator } from '../services/hooks/followTweet'
 import Fab from '../components/atoms/fab'
 import Avatar from '../components/atoms/avatar'
-import Separator from '../components/atoms/separator'
-import TweetCard from '../components/organisms/tweetCard'
+import TweetList from '../components/organisms/tweetList'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
   const [firebaseUser] = useAuthState(auth)
   const [user] = useUser(firebaseUser.uid)
-  const [tweets] = useTweets()
+  const [onFetch, { values, loading }] = useFollowTweetPaginator(firebaseUser.uid)
+
+  useEffect(() => {
+    onFetch({ initialize: true })
+  }, [onFetch])
 
   const goToTweet = useCallback(
     (uid: string, tweetID: string) => {
@@ -53,18 +56,14 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.root}>
-      <ScrollView>
-        {tweets.map((tweet) => (
-          <React.Fragment key={tweet.id}>
-            <TweetCard
-              tweet={tweet}
-              onPressCard={() => goToTweet(tweet.writer.ref.id, tweet.id)}
-              onPressAvatar={() => goToUser(tweet.writer.ref.id)}
-            />
-            <Separator />
-          </React.Fragment>
-        ))}
-      </ScrollView>
+      <TweetList
+        data={values}
+        refreshing={loading}
+        onRefresh={() => onFetch({ initialize: true })}
+        onEndReached={() => onFetch({ initialize: false })}
+        onPressCard={goToTweet}
+        onPressAvatar={goToUser}
+      />
       <View style={styles.fabWrapper}>
         <Fab onPress={goToCreateTweet}>
           <MaterialIcons name="edit" size={24} color="#ffffff" />
