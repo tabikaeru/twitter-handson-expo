@@ -1,20 +1,53 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, StyleSheet, GestureResponderEvent } from 'react-native'
-import { Tweet } from '../../entities/Tweet'
+import { TouchableOpacity, View, Text, StyleSheet, GestureResponderEvent, Dimensions } from 'react-native'
 import { useUser } from '../../services/hooks/user'
+import { useTweet } from '../../services/hooks/tweet'
 import { fromNow } from '../../services/date'
 import Avatar from '../../components/atoms/avatar'
+import CircleSkeleton from '../atoms/circleSkeleton'
+import BoxSkeleton from '../atoms/boxSkeleton'
 import Spacer from '../../components/atoms/spacer'
 import FileGallery from '../../components/moleculars/fileGallery'
 
+const FULL_WIDTH = Dimensions.get('window').width
+
 type TweetCardProps = {
-  tweet: Tweet
+  tweetID: string
+  writerUID: string
   onPressCard?: (event: GestureResponderEvent) => void
   onPressAvatar?: (event: GestureResponderEvent) => void
 }
 
-const TweetCard = ({ tweet, onPressCard, onPressAvatar }: TweetCardProps) => {
-  const [user, loading] = useUser(tweet.writer.ref.id)
+const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCardProps) => {
+  const [user, userLoading] = useUser(writerUID)
+  const [tweet, tweetLoading] = useTweet(writerUID, tweetID)
+
+  // MEMO: スケルトンカードを表示
+  if (userLoading || tweetLoading) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.inner}>
+          <TouchableOpacity onPress={onPressAvatar}>
+            <View style={styles.avatarWrapper}>
+              <CircleSkeleton size="m" />
+            </View>
+          </TouchableOpacity>
+          <Spacer layout="vertical" size="s" />
+          <View style={styles.contentWrapper}>
+            <View style={styles.contentHeaderWrapper}>
+              <BoxSkeleton width={FULL_WIDTH - 100} height={20} />
+            </View>
+            <Spacer size="m" />
+            <View>
+              <BoxSkeleton width={FULL_WIDTH - 200} height={24} />
+              <Spacer size="s" />
+              <BoxSkeleton width={FULL_WIDTH - 100} />
+            </View>
+          </View>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <TouchableOpacity style={styles.root} onPress={onPressCard}>
@@ -28,11 +61,8 @@ const TweetCard = ({ tweet, onPressCard, onPressAvatar }: TweetCardProps) => {
         <View style={styles.contentWrapper}>
           <View style={styles.contentHeaderWrapper}>
             <Text numberOfLines={1} ellipsizeMode="tail" style={styles.userText}>
-              <Text style={styles.nameText}>{loading ? '読み込み中' : user.name} </Text>
-              <Text style={styles.idText}>
-                @{tweet.writer.ref.id}
-                {tweet.writer.ref.id}
-              </Text>
+              <Text style={styles.nameText}>{user.name} </Text>
+              <Text style={styles.idText}>@{writerUID}</Text>
             </Text>
             <Spacer layout="vertical" size="s" />
             <Text style={styles.dateText}>{fromNow(tweet.createdAt)}</Text>
