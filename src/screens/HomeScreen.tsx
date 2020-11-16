@@ -57,7 +57,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.root}>
       <TweetList
-        data={values}
+        data={values.map((value) => ({ tweetID: value.id, writerUID: value.writer.ref.id }))}
         refreshing={loading}
         onRefresh={() => onFetch({ initialize: true })}
         onEndReached={() => onFetch({ initialize: false })}
