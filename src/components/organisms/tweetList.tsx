@@ -37,7 +37,7 @@ const ListEmptyComponent = () => {
 // UserList
 // -------------------------
 type TweetListProps = {
-  data: CloneTweet[]
+  data: { tweetID: string; writerUID: string }[]
   refreshing: boolean
   onRefresh: () => void
   onEndReached: () => void
@@ -49,14 +49,15 @@ const TweetList = ({ data, refreshing, onRefresh, onEndReached, onPressCard, onP
   return (
     <FlatList
       data={data}
+      keyExtractor={(item) => item.tweetID}
       refreshing={refreshing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       ItemSeparatorComponent={() => <Separator />}
       renderItem={({ item }) => (
         <TweetListItem
-          tweetID={item.id}
-          writerUID={item.writer.ref.id}
+          tweetID={item.tweetID}
+          writerUID={item.writerUID}
           onPressCard={onPressCard}
           onPressAvatar={onPressAvatar}
         />
