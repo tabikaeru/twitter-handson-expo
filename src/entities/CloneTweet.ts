@@ -6,6 +6,8 @@ export type CloneTweet = {
   updatedAt: Date
 }
 
+export type CreateCloneTweet = Omit<CloneTweet, 'id'>
+
 export const buildCloneTweet = (id: string, data: firebase.firestore.DocumentData) => {
   const newCloneTweet: CloneTweet = {
     id,

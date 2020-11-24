@@ -1,6 +1,6 @@
 import { firestore } from 'firebase'
 import { db, storage } from './firebase'
-import { CreateTweet } from '../entities/Tweet'
+import { buildTweet, CreateTweet } from '../entities/Tweet'
 
 const usersFirestoreRef = db.collection('users')
 const usersStorageRef = storage.ref('users')
@@ -20,9 +20,24 @@ const setTweetImage = async (uid: string, tweetID: string, fileName: string, blo
     })
 }
 
-const getTweetsRef = (uid: string) => {
+export const getTweetsRef = (uid: string) => {
   const tweetsRef = usersFirestoreRef.doc(uid).collection('tweets')
   return tweetsRef
+}
+
+export const getTweetRef = (uid: string, tweetID: string) => {
+  const tweetRef = usersFirestoreRef.doc(uid).collection('tweets').doc(tweetID)
+  return tweetRef
+}
+
+export const getTweet = async (uid: string, tweetID: string) => {
+  const tweetRef = getTweetRef(uid, tweetID)
+  const snapshot = await tweetRef.get()
+  if (!snapshot.exists) {
+    return null
+  }
+  const tweet = buildTweet(snapshot.id, snapshot.data())
+  return tweet
 }
 
 export const createTweet = async (uid: string, data: CreateTweet) => {
@@ -43,6 +58,7 @@ export const createTweet = async (uid: string, data: CreateTweet) => {
     text: data.text,
     fileURLs,
     writer: data.writer,
+    likeCount: 0,
     createdAt: firestore.FieldValue.serverTimestamp(),
     updatedAt: firestore.FieldValue.serverTimestamp(),
   })
