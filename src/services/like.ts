@@ -1,7 +1,6 @@
-import { Tweet } from '../entities/Tweet'
 import { getTweetRef, getTweet } from '../repositories/tweet'
 import { createLikeTweet, deleteLikeTweet } from '../repositories/likeTweet'
-import * as sharded from './extensions/conter'
+import * as sharded from './extensions/counter'
 
 export const like = async (fromUID: string, toUID: string, tweetID: string) => {
   try {
