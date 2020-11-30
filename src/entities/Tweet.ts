@@ -5,6 +5,7 @@ export type Tweet = {
   writer: {
     ref: firebase.firestore.DocumentReference
   }
+  likeCount: number
   createdAt: Date
   updatedAt: Date
 }
@@ -15,6 +16,7 @@ export const buildTweet = (id: string, data: firebase.firestore.DocumentData) =>
     text: data.text,
     fileURLs: data.fileURLs,
     writer: data.writer,
+    likeCount: data.likeCount,
     createdAt: data.createdAt.toDate(),
     updatedAt: data.updatedAt.toDate(),
   }

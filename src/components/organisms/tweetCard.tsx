@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { TouchableOpacity, View, Text, StyleSheet, GestureResponderEvent, Dimensions } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '../../repositories/firebase'
 import { useUser } from '../../services/hooks/user'
 import { useTweet } from '../../services/hooks/tweet'
+import { useLikeTweet } from '../../services/hooks/likeTweet'
+import { like, unlike } from '../../services/like'
 import { fromNow } from '../../services/date'
 import Avatar from '../../components/atoms/avatar'
 import CircleSkeleton from '../atoms/circleSkeleton'
@@ -19,8 +24,24 @@ type TweetCardProps = {
 }
 
 const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCardProps) => {
+  const [firebaseUser] = useAuthState(auth)
   const [user, userLoading] = useUser(writerUID)
   const [tweet, tweetLoading] = useTweet(writerUID, tweetID)
+  const [likeTweet, likeTweetLoading] = useLikeTweet(firebaseUser.uid, tweetID)
+
+  const isLiked = useMemo(() => {
+    return !!likeTweet
+  }, [likeTweet])
+
+  const onPressLike = useCallback(() => {
+    if (likeTweetLoading) return
+
+    if (isLiked) {
+      unlike(firebaseUser.uid, writerUID, tweetID)
+    } else {
+      like(firebaseUser.uid, writerUID, tweetID)
+    }
+  }, [firebaseUser, isLiked, likeTweetLoading, tweetID, writerUID])
 
   // MEMO: スケルトンカードを表示
   if (userLoading || tweetLoading) {
@@ -77,6 +98,25 @@ const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCard
               <FileGallery fileURLs={tweet.fileURLs} />
             </React.Fragment>
           )}
+          <View style={styles.actionsWrapper}>
+            <TouchableOpacity>
+              <MaterialCommunityIcons name="chat-outline" size={20} color="gray" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <MaterialCommunityIcons name="twitter-retweet" size={20} color="gray" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconWrapper} onPress={onPressLike}>
+              {isLiked ? (
+                <MaterialCommunityIcons name="heart" size={20} color="rgb(224, 36, 94)" />
+              ) : (
+                <MaterialCommunityIcons name="heart-outline" size={20} color="gray" />
+              )}
+              <Spacer layout="vertical" size="xxs" />
+              {tweet.likeCount > 0 && (
+                <Text style={isLiked ? styles.likedCountText : styles.countText}>{tweet.likeCount}</Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -104,6 +144,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
   },
+  actionsWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '80%',
+    paddingTop: 12,
+  },
+  iconWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   nameText: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -121,6 +174,14 @@ const styles = StyleSheet.create({
   },
   tweetText: {
     fontSize: 16,
+  },
+  countText: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  likedCountText: {
+    fontSize: 12,
+    color: 'rgb(224, 36, 94)',
   },
 })
 
