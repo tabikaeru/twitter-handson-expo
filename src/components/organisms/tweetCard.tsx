@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { TouchableOpacity, View, Text, StyleSheet, GestureResponderEvent, Dimensions } from 'react-native'
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, useDerivedValue } from 'react-native-reanimated'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../../repositories/firebase'
@@ -16,6 +17,49 @@ import FileGallery from '../../components/moleculars/fileGallery'
 
 const FULL_WIDTH = Dimensions.get('window').width
 
+type HeartIconProps = {
+  showLikeHeart: Animated.SharedValue<boolean>
+  isLiked: boolean
+  likeCount: number
+}
+
+const HeartIcon = ({ showLikeHeart, isLiked, likeCount }: HeartIconProps) => {
+  const heartScale = useDerivedValue(() => (showLikeHeart.value ? 1 : 0))
+  const heartoScale = useDerivedValue(() => (showLikeHeart.value ? 0.6 : 1))
+
+  const heartStyle = useAnimatedStyle(() => {
+    const springScale = withSpring(heartScale.value, {
+      damping: 10,
+      stiffness: 200,
+    })
+    const display = showLikeHeart.value ? 'flex' : 'none'
+    return { display, transform: [{ scale: springScale }] }
+  })
+
+  const heartoStyle = useAnimatedStyle(() => {
+    const springScale = withSpring(heartoScale.value, {
+      damping: 10,
+      stiffness: 200,
+    })
+    const display = showLikeHeart.value ? 'none' : 'flex'
+    return { display, transform: [{ scale: springScale }] }
+  })
+
+  return (
+    <React.Fragment>
+      <Animated.View style={heartStyle}>
+        <MaterialCommunityIcons name="heart" size={20} color="rgb(224, 36, 94)" />
+      </Animated.View>
+      <Animated.View style={heartoStyle}>
+        <MaterialCommunityIcons name="heart-outline" size={20} color="gray" />
+      </Animated.View>
+
+      <Spacer layout="vertical" size="xxs" />
+      {likeCount > 0 && <Text style={isLiked ? styles.likedCountText : styles.countText}>{likeCount}</Text>}
+    </React.Fragment>
+  )
+}
+
 type TweetCardProps = {
   tweetID: string
   writerUID: string
@@ -29,6 +73,22 @@ const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCard
   const [tweet, tweetLoading] = useTweet(writerUID, tweetID)
   const [likeTweet, likeTweetLoading] = useLikeTweet(firebaseUser.uid, tweetID)
 
+  const preparedHeartAnimation = useRef<boolean>(false)
+  const showLikeHeart = useSharedValue<boolean>(false)
+
+  useEffect(() => {
+    if (likeTweetLoading) return
+    if (preparedHeartAnimation.current) return
+
+    if (likeTweet) {
+      showLikeHeart.value = true
+      preparedHeartAnimation.current = true
+    } else {
+      showLikeHeart.value = false
+      preparedHeartAnimation.current = true
+    }
+  }, [likeTweet, likeTweetLoading, showLikeHeart])
+
   const isLiked = useMemo(() => {
     return !!likeTweet
   }, [likeTweet])
@@ -37,11 +97,13 @@ const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCard
     if (likeTweetLoading) return
 
     if (isLiked) {
+      showLikeHeart.value = false
       unlike(firebaseUser.uid, writerUID, tweetID)
     } else {
+      showLikeHeart.value = true
       like(firebaseUser.uid, writerUID, tweetID)
     }
-  }, [firebaseUser, isLiked, likeTweetLoading, tweetID, writerUID])
+  }, [firebaseUser, isLiked, likeTweetLoading, showLikeHeart, tweetID, writerUID])
 
   // MEMO: スケルトンカードを表示
   if (userLoading || tweetLoading) {
@@ -106,14 +168,8 @@ const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCard
               <MaterialCommunityIcons name="twitter-retweet" size={20} color="gray" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconWrapper} onPress={onPressLike}>
-              {isLiked ? (
-                <MaterialCommunityIcons name="heart" size={20} color="rgb(224, 36, 94)" />
-              ) : (
-                <MaterialCommunityIcons name="heart-outline" size={20} color="gray" />
-              )}
-              <Spacer layout="vertical" size="xxs" />
-              {tweet.likeCount > 0 && (
-                <Text style={isLiked ? styles.likedCountText : styles.countText}>{tweet.likeCount}</Text>
+              {!likeTweetLoading && (
+                <HeartIcon showLikeHeart={showLikeHeart} isLiked={isLiked} likeCount={tweet.likeCount} />
               )}
             </TouchableOpacity>
           </View>
