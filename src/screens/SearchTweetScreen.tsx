@@ -39,6 +39,13 @@ const SearchTweetScreen = () => {
     [navigation]
   )
 
+  const goToCreateTweet = useCallback(
+    (writerUID: string, tweetID: string) => {
+      navigation.dispatch(StackActions.push('CreateTweet', { tweetID, writerUID }))
+    },
+    [navigation]
+  )
+
   return (
     <View style={styles.root}>
       <View style={[styles.headerWrapper, { paddingTop: 9 + inset.top }]}>
@@ -59,6 +66,7 @@ const SearchTweetScreen = () => {
         onEndReached={() => onFetch({ initialize: false })}
         onPressCard={goToTweet}
         onPressAvatar={goToUser}
+        onPressRetweet={goToCreateTweet}
       />
     </View>
   )
