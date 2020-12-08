@@ -19,10 +19,22 @@ const TweetScreen = () => {
     [navigation]
   )
 
+  const goToCreateTweet = useCallback(
+    (writerUID: string, tweetID: string) => {
+      navigation.dispatch(StackActions.push('CreateTweet', { tweetID, writerUID }))
+    },
+    [navigation]
+  )
+
   return (
     <View style={styles.root}>
       <ScrollView>
-        <TweetCard tweetID={tweetID} writerUID={uid} onPressAvatar={() => goToUser(uid)} />
+        <TweetCard
+          tweetID={tweetID}
+          writerUID={uid}
+          onPressAvatar={() => goToUser(uid)}
+          onPressRetweet={() => goToCreateTweet(uid, tweetID)}
+        />
         <Separator />
       </ScrollView>
     </View>
