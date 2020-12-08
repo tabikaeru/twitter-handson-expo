@@ -14,6 +14,7 @@ import CircleSkeleton from '../atoms/circleSkeleton'
 import BoxSkeleton from '../atoms/boxSkeleton'
 import Spacer from '../../components/atoms/spacer'
 import FileGallery from '../../components/moleculars/fileGallery'
+import TweetPreview from './tweetPreview'
 
 const FULL_WIDTH = Dimensions.get('window').width
 
@@ -64,10 +65,19 @@ type TweetCardProps = {
   tweetID: string
   writerUID: string
   onPressCard?: (event: GestureResponderEvent) => void
+  onPressPreview?: (event: GestureResponderEvent) => void
   onPressAvatar?: (event: GestureResponderEvent) => void
+  onPressRetweet?: (event: GestureResponderEvent) => void
 }
 
-const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCardProps) => {
+const TweetCard = ({
+  tweetID,
+  writerUID,
+  onPressCard,
+  onPressPreview,
+  onPressAvatar,
+  onPressRetweet,
+}: TweetCardProps) => {
   const [firebaseUser] = useAuthState(auth)
   const [user, userLoading] = useUser(writerUID)
   const [tweet, tweetLoading] = useTweet(writerUID, tweetID)
@@ -160,11 +170,22 @@ const TweetCard = ({ tweetID, writerUID, onPressCard, onPressAvatar }: TweetCard
               <FileGallery fileURLs={tweet.fileURLs} />
             </React.Fragment>
           )}
+          {tweet.origin && (
+            <React.Fragment>
+              <Spacer size="s" />
+              <TweetPreview
+                tweetID={tweet.origin.ref.id}
+                writerUID={tweet.origin.writer.ref.id}
+                onPress={onPressPreview}
+              />
+              <Spacer size="s" />
+            </React.Fragment>
+          )}
           <View style={styles.actionsWrapper}>
             <TouchableOpacity>
               <MaterialCommunityIcons name="chat-outline" size={20} color="gray" />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPressRetweet}>
               <MaterialCommunityIcons name="twitter-retweet" size={20} color="gray" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconWrapper} onPress={onPressLike}>
