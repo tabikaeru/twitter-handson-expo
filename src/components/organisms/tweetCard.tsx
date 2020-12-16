@@ -15,6 +15,7 @@ import BoxSkeleton from '../atoms/boxSkeleton'
 import Spacer from '../../components/atoms/spacer'
 import FileGallery from '../../components/moleculars/fileGallery'
 import TweetPreview from './tweetPreview'
+import TweetFrom from './tweetFrom'
 
 const FULL_WIDTH = Dimensions.get('window').width
 
@@ -66,8 +67,10 @@ type TweetCardProps = {
   writerUID: string
   onPressCard?: (event: GestureResponderEvent) => void
   onPressPreview?: (event: GestureResponderEvent) => void
+  onPressFrom?: (event: GestureResponderEvent) => void
   onPressAvatar?: (event: GestureResponderEvent) => void
   onPressRetweet?: (event: GestureResponderEvent) => void
+  onPressReply?: (event: GestureResponderEvent) => void
 }
 
 const TweetCard = ({
@@ -75,8 +78,10 @@ const TweetCard = ({
   writerUID,
   onPressCard,
   onPressPreview,
+  onPressFrom,
   onPressAvatar,
   onPressRetweet,
+  onPressReply,
 }: TweetCardProps) => {
   const [firebaseUser] = useAuthState(auth)
   const [user, userLoading] = useUser(writerUID)
@@ -144,6 +149,9 @@ const TweetCard = ({
 
   return (
     <TouchableOpacity style={styles.root} onPress={onPressCard}>
+      {tweet && tweet.reply && (
+        <TweetFrom tweetID={tweet.reply.ref.id} writerUID={tweet.reply.writer.ref.id} onPress={onPressFrom} />
+      )}
       <View style={styles.inner}>
         <View style={styles.avatarWrapper}>
           <TouchableOpacity onPress={onPressAvatar}>
@@ -182,7 +190,7 @@ const TweetCard = ({
             </React.Fragment>
           )}
           <View style={styles.actionsWrapper}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPressReply}>
               <MaterialCommunityIcons name="chat-outline" size={20} color="gray" />
             </TouchableOpacity>
             <TouchableOpacity onPress={onPressRetweet}>

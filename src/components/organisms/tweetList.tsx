@@ -12,9 +12,17 @@ type TweetListItemProps = {
   onPressCard?: (uid: string, tweetID: string) => void
   onPressAvatar?: (uid: string) => void
   onPressRetweet?: (uid: string, tweetID: string) => void
+  onPressReply?: (uid: string, tweetID: string) => void
 }
 
-const TweetListItem = ({ tweetID, writerUID, onPressCard, onPressAvatar, onPressRetweet }: TweetListItemProps) => {
+const TweetListItem = ({
+  tweetID,
+  writerUID,
+  onPressCard,
+  onPressAvatar,
+  onPressRetweet,
+  onPressReply,
+}: TweetListItemProps) => {
   return (
     <TweetCard
       tweetID={tweetID}
@@ -22,6 +30,7 @@ const TweetListItem = ({ tweetID, writerUID, onPressCard, onPressAvatar, onPress
       onPressCard={() => onPressCard(writerUID, tweetID)}
       onPressAvatar={() => onPressAvatar(writerUID)}
       onPressRetweet={() => onPressRetweet(writerUID, tweetID)}
+      onPressReply={() => onPressReply(writerUID, tweetID)}
     />
   )
 }
@@ -46,6 +55,7 @@ type TweetListProps = {
   onPressCard?: (uid: string, tweetID: string) => void
   onPressAvatar?: (uid: string) => void
   onPressRetweet?: (uid: string, tweetID: string) => void
+  onPressReply?: (uid: string, tweetID: string) => void
 }
 
 const TweetList = ({
@@ -56,6 +66,7 @@ const TweetList = ({
   onPressCard,
   onPressAvatar,
   onPressRetweet,
+  onPressReply,
 }: TweetListProps) => {
   return (
     <FlatList
@@ -72,6 +83,7 @@ const TweetList = ({
           onPressCard={onPressCard}
           onPressAvatar={onPressAvatar}
           onPressRetweet={onPressRetweet}
+          onPressReply={onPressReply}
         />
       )}
       ListEmptyComponent={<ListEmptyComponent />}
