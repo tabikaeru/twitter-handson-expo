@@ -19,6 +19,7 @@ import Separator from '../components/atoms/separator'
 import Spacer from '../components/atoms/spacer'
 import LoadingModal from '../components/moleculars/loadingModal'
 import TweetPreview from '../components/organisms/tweetPreview'
+import TweetFrom from '../components/organisms/tweetFrom'
 
 const FULL_WIDTH = Dimensions.get('window').width
 
@@ -33,9 +34,14 @@ const CreateTweetScreen = () => {
   const [fetching, setFetching] = useState<boolean>(false)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tweetID = (route.params as any)?.tweetID
+  const originTweetID = (route.params as any)?.originTweetID
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const writerUID = (route.params as any)?.writerUID
+  const originWriterUID = (route.params as any)?.originWriterUID
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const replyTweetID = (route.params as any)?.replyTweetID
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const replyWriterUID = (route.params as any)?.replyWriterUID
 
   const onAddImage = useCallback(async () => {
     if (fileURLs.length > 3) {
@@ -68,11 +74,21 @@ const CreateTweetScreen = () => {
         const userRef = getUserRef(firebaseUser.uid)
 
         let origin = undefined
-        if (tweetID && writerUID) {
+        if (originTweetID && originWriterUID) {
           origin = {
-            ref: getTweetRef(writerUID, tweetID),
+            ref: getTweetRef(originWriterUID, originTweetID),
             writer: {
-              ref: getUserRef(writerUID),
+              ref: getUserRef(originWriterUID),
+            },
+          }
+        }
+
+        let reply = undefined
+        if (replyTweetID && replyWriterUID) {
+          reply = {
+            ref: getTweetRef(replyWriterUID, replyTweetID),
+            writer: {
+              ref: getUserRef(replyWriterUID),
             },
           }
         }
@@ -81,6 +97,7 @@ const CreateTweetScreen = () => {
           text,
           fileBlobs,
           origin,
+          reply,
           writer: {
             ref: userRef,
           },
@@ -96,7 +113,7 @@ const CreateTweetScreen = () => {
         Alert.alert('エラー', e)
       }
     },
-    [firebaseUser.uid, navigation, tweetID, user, writerUID]
+    [firebaseUser, navigation, originTweetID, originWriterUID, replyTweetID, replyWriterUID, user]
   )
 
   return (
@@ -107,6 +124,7 @@ const CreateTweetScreen = () => {
           <FilledButton text="ツイートする" fontSize={14} onPress={() => onTweet(text, fileURLs)} />
         </View>
         <ScrollView>
+          {replyTweetID && replyWriterUID && <TweetFrom tweetID={replyTweetID} writerUID={replyWriterUID} />}
           <View style={styles.content}>
             {user && <Avatar uri={user.thumbnailURL ?? undefined} />}
             <TextInput
@@ -135,11 +153,11 @@ const CreateTweetScreen = () => {
               </React.Fragment>
             ))}
           </View>
-          {tweetID && writerUID && (
+          {originTweetID && originWriterUID && (
             <React.Fragment>
               <Spacer size="l" />
               <View style={styles.origin}>
-                <TweetPreview tweetID={tweetID} writerUID={writerUID} />
+                <TweetPreview tweetID={originTweetID} writerUID={originWriterUID} />
               </View>
             </React.Fragment>
           )}

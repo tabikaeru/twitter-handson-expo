@@ -3,6 +3,7 @@ export type CloneTweet = {
   ref: firebase.firestore.DocumentReference
   writer: { ref: firebase.firestore.DocumentReference }
   origin: { ref: firebase.firestore.DocumentReference } | null
+  reply: { ref: firebase.firestore.DocumentReference } | null
   createdAt: Date
   updatedAt: Date
 }
@@ -15,6 +16,7 @@ export const buildCloneTweet = (id: string, data: firebase.firestore.DocumentDat
     ref: data.ref,
     writer: data.writer,
     origin: data.origin,
+    reply: data.reply,
     createdAt: data.createdAt.toDate(),
     updatedAt: data.updatedAt.toDate(),
   }

@@ -19,9 +19,16 @@ const TweetScreen = () => {
     [navigation]
   )
 
-  const goToCreateTweet = useCallback(
+  const goToCreateTweetWithOrigin = useCallback(
     (writerUID: string, tweetID: string) => {
-      navigation.dispatch(StackActions.push('CreateTweet', { tweetID, writerUID }))
+      navigation.dispatch(StackActions.push('CreateTweet', { originTweetID: tweetID, originWriterUID: writerUID }))
+    },
+    [navigation]
+  )
+
+  const goToCreateTweetWithReply = useCallback(
+    (writerUID: string, tweetID: string) => {
+      navigation.dispatch(StackActions.push('CreateTweet', { replyTweetID: tweetID, replyWriterUID: writerUID }))
     },
     [navigation]
   )
@@ -33,7 +40,8 @@ const TweetScreen = () => {
           tweetID={tweetID}
           writerUID={uid}
           onPressAvatar={() => goToUser(uid)}
-          onPressRetweet={() => goToCreateTweet(uid, tweetID)}
+          onPressRetweet={() => goToCreateTweetWithOrigin(uid, tweetID)}
+          onPressReply={() => goToCreateTweetWithReply(uid, tweetID)}
         />
         <Separator />
       </ScrollView>

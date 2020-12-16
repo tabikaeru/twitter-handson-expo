@@ -59,6 +59,7 @@ export const createTweet = async (uid: string, data: CreateTweet) => {
     fileURLs,
     writer: data.writer,
     origin: data.origin ?? null,
+    reply: data.reply ?? null,
     likeCount: 0,
     createdAt: firestore.FieldValue.serverTimestamp(),
     updatedAt: firestore.FieldValue.serverTimestamp(),
