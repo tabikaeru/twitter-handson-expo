@@ -2,12 +2,12 @@ import React, { useState, useCallback } from 'react'
 import { ScrollView, View, TextInput, TouchableOpacity, Image, StyleSheet, Alert, Dimensions } from 'react-native'
 import { EvilIcons, AntDesign } from '@expo/vector-icons'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation, useRoute } from '@react-navigation/core'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { CreateTweet } from '../entities/Tweet'
 import { auth } from '../repositories/firebase'
-import { createTweet } from '../repositories/tweet'
+import { createTweet, getTweetRef } from '../repositories/tweet'
 import { getUserRef } from '../repositories/user'
 import { pickImageFromDevice, convertURLToBlob } from '../services/image'
 import { useUser } from '../services/hooks/user'
@@ -18,17 +18,24 @@ import Avatar from '../components/atoms/avatar'
 import Separator from '../components/atoms/separator'
 import Spacer from '../components/atoms/spacer'
 import LoadingModal from '../components/moleculars/loadingModal'
+import TweetPreview from '../components/organisms/tweetPreview'
 
 const FULL_WIDTH = Dimensions.get('window').width
 
 const CreateTweetScreen = () => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
+  const route = useRoute()
   const [text, setText] = useState<string>('')
   const [fileURLs, setFileURLs] = useState<string[]>([])
   const [firebaseUser] = useAuthState(auth)
   const [user] = useUser(firebaseUser.uid)
   const [fetching, setFetching] = useState<boolean>(false)
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tweetID = (route.params as any)?.tweetID
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const writerUID = (route.params as any)?.writerUID
 
   const onAddImage = useCallback(async () => {
     if (fileURLs.length > 3) {
@@ -59,13 +66,26 @@ const CreateTweetScreen = () => {
         })
         const fileBlobs = await Promise.all(fileTask)
         const userRef = getUserRef(firebaseUser.uid)
+
+        let origin = undefined
+        if (tweetID && writerUID) {
+          origin = {
+            ref: getTweetRef(writerUID, tweetID),
+            writer: {
+              ref: getUserRef(writerUID),
+            },
+          }
+        }
+
         const data: CreateTweet = {
           text,
           fileBlobs,
+          origin,
           writer: {
             ref: userRef,
           },
         }
+
         await createTweet(firebaseUser.uid, data)
         setText('')
         setFetching(false)
@@ -76,7 +96,7 @@ const CreateTweetScreen = () => {
         Alert.alert('エラー', e)
       }
     },
-    [firebaseUser.uid, navigation, user]
+    [firebaseUser.uid, navigation, tweetID, user, writerUID]
   )
 
   return (
@@ -115,6 +135,14 @@ const CreateTweetScreen = () => {
               </React.Fragment>
             ))}
           </View>
+          {tweetID && writerUID && (
+            <React.Fragment>
+              <Spacer size="l" />
+              <View style={styles.origin}>
+                <TweetPreview tweetID={tweetID} writerUID={writerUID} />
+              </View>
+            </React.Fragment>
+          )}
           <KeyboardSpacer />
         </ScrollView>
         <View style={styles.bottomActionBarWrapper}>
@@ -173,6 +201,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   files: {
+    paddingHorizontal: 24,
+  },
+  origin: {
     paddingHorizontal: 24,
   },
   input: {

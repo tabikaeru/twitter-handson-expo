@@ -82,6 +82,13 @@ const HomeStackNavigator = () => (
         },
       }}
     />
+    <Stack.Screen
+      name="CreateTweet"
+      component={CreateTweetScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
   </Stack.Navigator>
 )
 
@@ -138,6 +145,13 @@ const SearchStackNavigator = () => (
           shadowOpacity: 0,
           elevation: 0,
         },
+      }}
+    />
+    <Stack.Screen
+      name="CreateTweet"
+      component={CreateTweetScreen}
+      options={{
+        headerShown: false,
       }}
     />
   </Stack.Navigator>

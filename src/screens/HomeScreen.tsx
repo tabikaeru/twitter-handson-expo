@@ -31,6 +31,13 @@ const HomeScreen = () => {
     navigation.dispatch(StackActions.push('CreateTweet'))
   }, [navigation])
 
+  const goToCreateTweetWithParams = useCallback(
+    (writerUID: string, tweetID: string) => {
+      navigation.dispatch(StackActions.push('CreateTweet', { tweetID, writerUID }))
+    },
+    [navigation]
+  )
+
   const goToUser = useCallback(
     (uid) => {
       navigation.dispatch(StackActions.push('User', { uid }))
@@ -63,6 +70,7 @@ const HomeScreen = () => {
         onEndReached={() => onFetch({ initialize: false })}
         onPressCard={goToTweet}
         onPressAvatar={goToUser}
+        onPressRetweet={goToCreateTweetWithParams}
       />
       <View style={styles.fabWrapper}>
         <Fab onPress={goToCreateTweet}>
