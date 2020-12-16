@@ -39,9 +39,16 @@ const SearchTweetScreen = () => {
     [navigation]
   )
 
-  const goToCreateTweet = useCallback(
+  const goToCreateTweetWithOrigin = useCallback(
     (writerUID: string, tweetID: string) => {
-      navigation.dispatch(StackActions.push('CreateTweet', { tweetID, writerUID }))
+      navigation.dispatch(StackActions.push('CreateTweet', { originTweetID: tweetID, originWriterUID: writerUID }))
+    },
+    [navigation]
+  )
+
+  const goToCreateTweetWithReply = useCallback(
+    (writerUID: string, tweetID: string) => {
+      navigation.dispatch(StackActions.push('CreateTweet', { replyTweetID: tweetID, replyWriterUID: writerUID }))
     },
     [navigation]
   )
@@ -66,7 +73,8 @@ const SearchTweetScreen = () => {
         onEndReached={() => onFetch({ initialize: false })}
         onPressCard={goToTweet}
         onPressAvatar={goToUser}
-        onPressRetweet={goToCreateTweet}
+        onPressRetweet={goToCreateTweetWithOrigin}
+        onPressReply={goToCreateTweetWithReply}
       />
     </View>
   )

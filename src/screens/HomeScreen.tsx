@@ -31,9 +31,16 @@ const HomeScreen = () => {
     navigation.dispatch(StackActions.push('CreateTweet'))
   }, [navigation])
 
-  const goToCreateTweetWithParams = useCallback(
+  const goToCreateTweetWithOrigin = useCallback(
     (writerUID: string, tweetID: string) => {
-      navigation.dispatch(StackActions.push('CreateTweet', { tweetID, writerUID }))
+      navigation.dispatch(StackActions.push('CreateTweet', { originTweetID: tweetID, originWriterUID: writerUID }))
+    },
+    [navigation]
+  )
+
+  const goToCreateTweetWithReply = useCallback(
+    (writerUID: string, tweetID: string) => {
+      navigation.dispatch(StackActions.push('CreateTweet', { replyTweetID: tweetID, replyWriterUID: writerUID }))
     },
     [navigation]
   )
@@ -70,7 +77,8 @@ const HomeScreen = () => {
         onEndReached={() => onFetch({ initialize: false })}
         onPressCard={goToTweet}
         onPressAvatar={goToUser}
-        onPressRetweet={goToCreateTweetWithParams}
+        onPressRetweet={goToCreateTweetWithOrigin}
+        onPressReply={goToCreateTweetWithReply}
       />
       <View style={styles.fabWrapper}>
         <Fab onPress={goToCreateTweet}>
